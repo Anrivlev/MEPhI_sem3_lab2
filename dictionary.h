@@ -55,7 +55,7 @@ class Dictionary
 {
 private:
 
-    BinaryTree<PairKE<TKey, TElement>* dict;
+    BinaryTree<PairKE<TKey, TElement>>* dict;
 
 public:
     void Dictionary(const TKey key, const TElement elem, bool (*cmp)(T, T))
@@ -83,10 +83,21 @@ public:
     }
     void Add(TKey key, TElement element)
     {
-
+        PairKE<TKey, TElement> spair = PairKE(key, element);
+        if(this->dict->exist(spair) == true)
+        {
+            return;
+        }
+        this->dict->add(spair);
     }
     void Remove(TKey key)
     {
-
+        PairKE<TKey, TElement> spair = PairKE(key, element);
+        if(this->dict->exist(spair) == true)
+        {
+            this->dict->erase(spair);
+            return;
+        }
+        throw out_of_range(IndexOutOfRangeEx);
     }
 };
