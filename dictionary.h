@@ -39,7 +39,7 @@ public:
     }
     bool operator>=(const PairKE another)
     {
-        return this->key < another.key;
+        return this->key >= another.key;
     }
     bool operator!=(const PairKE another)
     {
@@ -91,7 +91,7 @@ public:
     void add(TKey key, TElement element)
     {
         PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key, element);
-        if(this->dict->exist(spair) == true)
+        if(this->dict->exist(spair))
         {
             return;
         }
@@ -100,7 +100,7 @@ public:
     void remove(TKey key)
     {
         PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
-        if(this->dict->exist(spair) == true)
+        if(this->dict->exist(spair))
         {
             this->dict->erase(spair);
             return;
