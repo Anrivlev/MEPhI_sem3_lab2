@@ -30,23 +30,6 @@ private:
 			delete nodePtr->right;
 		}
 	}
-	node* search(const T elem)
-	{
-		node* nodePtr = this->root;
-		while(nodePtr != nullptr)
-		{
-			if(!this->cmp(nodePtr->elem, elem))
-			{
-				nodePtr = nodePtr->left;
-			}
-			else if(!this->cmp(elem, nodePtr->elem))
-			{
-				nodePtr = nodePtr->right;
-			}
-			else return nodePtr;
-		}
-		return nullptr;
-	}
 	void erase_(node* delNode_)
 	{
 		node* delNode = delNode_;
@@ -142,7 +125,8 @@ void printAll(node* nodePtr)
 		{
 			printAll(nodePtr->left);
 		}
-		std::cout << nodePtr->elem << " ";
+		std::cout << nodePtr->elem;
+        std::cout << " ";
 		if (nodePtr->right != nullptr)
 		{
 			printAll(nodePtr->right);
@@ -262,9 +246,27 @@ public:
 	{
 		if(this->root == nullptr) return;
 		printAll(this->root);
+		std::cout << endl;
 	}
+    node* search(const T elem)
+    {
+        node* nodePtr = this->root;
+        while(nodePtr != nullptr)
+        {
+            if(!this->cmp(nodePtr->elem, elem))
+            {
+                nodePtr = nodePtr->left;
+            }
+            else if(!this->cmp(elem, nodePtr->elem))
+            {
+                nodePtr = nodePtr->right;
+            }
+            else return nodePtr;
+        }
+        return nullptr;
+    }
     T getElem(node* cur)
     {
-        return cur->data;
+        return cur->elem;
     }
 };

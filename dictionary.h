@@ -2,6 +2,8 @@
 
 #include "binary_tree.h"
 
+#define NO_ELEMENT "NO ELEMENT WITH GIVEN KEY"
+
 template<class TKey, class TElement>
 class PairKE
 {
@@ -15,40 +17,44 @@ public:
         this->element = element;
     }
     ~PairKE() = default;
-    TElement getElem()
+    TElement getElem() const
     {
         return this->element;
     }
-    TKey getKey()
+    TKey getKey() const
     {
         return this->key;
     }
-    bool operator<(const pairKE a, const pairKE b)
+    bool operator<(const PairKE another)
     {
-        return a->TKey < b->TKey;
+        return this->key < another.key;
     }
-    bool operator>(const pairKE a, const pairKE b)
+    bool operator>(const PairKE another)
     {
-        return a->TKey > b->TKey;
+        return this->key > another.key;
     }
-    bool operator<=(const pairKE a, const pairKE b)
+    bool operator<=(const PairKE another)
     {
-        return a->TKey <= b->TKey;
+        return this->key <= another.key;
     }
-    bool operator>=(const pairKE a, const pairKE b)
+    bool operator>=(const PairKE another)
     {
-        return a->TKey < b->TKey;
+        return this->key < another.key;
     }
-    bool operator!=(const pairKE a, const pairKE b)
+    bool operator!=(const PairKE another)
     {
-        return a->TKey != b->TKey;
+        return this->key != another.key;
     }
-    bool operator==(const pairKE a, const pairKE b)
+    bool operator==(const PairKE another)
     {
-        return a->TKey == b->TKey;
+        return this->key == another.key;
     }
 };
-
+template <class TKey, class TElement>
+std::ostream& operator<< (std::ostream &out, const PairKE<TKey, TElement> pair)
+{
+    return out << "<" << pair.getKey() << ", " << pair.getElem() << ">";
+}
 
 template <class TKey, class TElement>
 class Dictionary
@@ -58,46 +64,55 @@ private:
     BinaryTree<PairKE<TKey, TElement>>* dict;
 
 public:
-    void Dictionary(const TKey key, const TElement elem, bool (*cmp)(T, T))
+    Dictionary(const TKey key, const TElement elem, bool (*cmp)(PairKE<TKey, TElement>, PairKE<TKey, TElement>))
     {
-        this->dict = new BinaryTree<T>(elem, cmp);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key, elem);
+        this->dict = new BinaryTree<PairKE<TKey, TElement>>(spair, cmp);
     }
-    void ~Dictionary() =default;
-    int GetCount()
+    ~Dictionary() = default;
+    int getCount()
     {
         return this->dict->getSize();
     }
-    TElement Get(TKey key)
+    TElement get(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE(key);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
         if(this->dict->exist(spair))
         {
-            return this->dict->getElem(spair).getElem();
+            return this->dict->getElem(dict->search(spair)).getElem();
         }
-        throw out_of_range(IndexOutOfRangeEx);
+        throw std::out_of_range(NO_ELEMENT);
     }
-    bool ContainsKey(TKey key)
+    bool containsKey(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE(key);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
         return this->dict->exist(spair);
     }
-    void Add(TKey key, TElement element)
+    void add(TKey key, TElement element)
     {
-        PairKE<TKey, TElement> spair = PairKE(key, element);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key, element);
         if(this->dict->exist(spair) == true)
         {
             return;
         }
         this->dict->add(spair);
     }
-    void Remove(TKey key)
+    void remove(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE(key, element);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
         if(this->dict->exist(spair) == true)
         {
             this->dict->erase(spair);
             return;
         }
-        throw out_of_range(IndexOutOfRangeEx);
+        throw std::out_of_range(NO_ELEMENT);
+    }
+    void print()
+    {
+        this->dict->printAll();
+    }
+    void showDFS()
+    {
+        this->dict->showDFS();
     }
 };
