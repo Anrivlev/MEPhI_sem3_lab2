@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 template <class T>
 class BinaryTree
 {
@@ -9,7 +10,7 @@ private:
 		node* parent = nullptr;
 		node* left = nullptr;
 		node* right = nullptr;
-		T elem = T(0);
+		T elem;
 	};
 	node* root = nullptr;
 	int size = 0;
@@ -118,6 +119,21 @@ void showDFS(node* nodePtr)
 			std::cout << "\nRIGHT " << nodePtr->right->elem << " | PARENT " << nodePtr->right->parent->elem;;
 		}
 	}
+	string toString(node* nodePtr, string str)
+    {
+        if (nodePtr == nullptr) return "";
+        if (nodePtr->left != nullptr)
+        {
+            return this->toString(nodePtr->left, str);
+        }
+        str += nodePtr->elem;
+        str += " ";
+        if (nodePtr->right != nullptr)
+        {
+            return this->toString(nodePtr->right, str);
+        }
+        return str;
+    }
 void printAll(node* nodePtr)
 	{
 		if (nodePtr == nullptr) return;
@@ -268,5 +284,11 @@ public:
     T getElem(node* cur)
     {
         return cur->elem;
+    }
+    string toString()
+    {
+        if(this->root == nullptr) return "";
+        string str = "";
+        return this->toString(this->root, str) +"\n";
     }
 };

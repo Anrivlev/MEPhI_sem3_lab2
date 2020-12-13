@@ -8,10 +8,11 @@ template<class TKey, class TElement>
 class PairKE
 {
 private:
-    TKey key = (TKey)(0);
-    TElement element = (TElement)(0);
+    TKey key;
+    TElement element;
 public:
-    PairKE(TKey key, TElement element=(TElement)(0))
+    PairKE() = default;
+    PairKE(TKey key, TElement element)
     {
         this->key = key;
         this->element = element;
@@ -24,6 +25,14 @@ public:
     TKey getKey() const
     {
         return this->key;
+    }
+    void setKey(TKey key)
+    {
+        this->key = key;
+    }
+    void setElem(TElement elem)
+    {
+        this->element = elem;
     }
     bool operator<(const PairKE another)
     {
@@ -59,7 +68,7 @@ std::ostream& operator<< (std::ostream &out, const PairKE<TKey, TElement> pair)
 template <class TKey, class TElement>
 class Dictionary
 {
-private:
+protected:
 
     BinaryTree<PairKE<TKey, TElement>>* dict;
 
@@ -76,7 +85,8 @@ public:
     }
     TElement get(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>();
+        spair.setKey(key);
         if(this->dict->exist(spair))
         {
             return this->dict->getElem(dict->search(spair)).getElem();
@@ -85,7 +95,8 @@ public:
     }
     bool containsKey(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>();
+        spair.setKey(key);
         return this->dict->exist(spair);
     }
     void add(TKey key, TElement element)
@@ -114,5 +125,9 @@ public:
     void showDFS()
     {
         this->dict->showDFS();
+    }
+    string toString()
+    {
+        return this->dict->toString();
     }
 };

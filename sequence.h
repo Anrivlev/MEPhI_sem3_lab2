@@ -44,7 +44,8 @@ protected:
 	DynamicArray<T> *array;
 
 public:
-	ArraySequence(){
+	ArraySequence()
+	{
 		this->array = new DynamicArray<T>();
 		this->size = 0;
 	}
@@ -65,7 +66,8 @@ public:
 		this->size = size;
 	}
 
-	ArraySequence(int size){
+	ArraySequence(int size)
+	{
 		this->array = new DynamicArray<T>(size);
 		this->size = size;
 	}

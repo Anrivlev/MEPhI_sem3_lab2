@@ -14,6 +14,10 @@ public:
 	{
 		this->set = new BinaryTree<T>(elem, cmp);
 	}
+	Set(const Set<T> &set)
+    {
+	    this->set = new BinaryTree<T>(set);
+    }
 	~Set() = default;
 	void add(const T elem)
 	{
