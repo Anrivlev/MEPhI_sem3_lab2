@@ -67,7 +67,7 @@ void interface_index()
     while(true)
     {
         cout << "Enter 1 to generate some random persons" << endl;
-        cout << "Enter 2 to add a person" << endl;
+        cout << "Enter 2 to add a custom person" << endl;
         cout << "Enter 3 to index data" << endl;
         cout << "Enter a different number to quit" << endl;
         cin >> choose;
