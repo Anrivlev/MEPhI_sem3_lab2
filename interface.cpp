@@ -1,194 +1,178 @@
-#include <complex.h>
 #include "sortFunctions.h"
 #include <cstdlib>
-#include <ctime>
+#include "index.h"
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <ctime>
 
 using namespace std;
 
+string FirstNames[10] {"Andrey", "Alexey", "Ivan", "Vasiliy", "Igor", "Egor", "Oleg", "Vladimir", "Alexander", "Michael"};
+string MiddleNames[10] {"Ivanov", "Frolov", "Ivlev", "Roslovtsev", "Privalenko", "Korotkov", "Novikov", "Romanov", "Demidov", "Svetov"};
+string LastNames[10] {"Andreevich", "Alexeevich", "Ivanovich", "Vasilievich", "Igorievich", "Egorovich", "Olegovich", "Vladimirovich", "Alexandrovich", "Michaelovich"};
+
+string randomFN()
+{
+    int i = rand() % 10;
+    return FirstNames[i];
+}
+string randomMN()
+{
+    int i = rand() % 10;
+    return MiddleNames[i];
+}
+string randomLN()
+{
+    int i = rand() % 10;
+    return LastNames[i];
+}
+int randomBY()
+{
+    return 1920 + (rand() % 100);
+}
+Person enterPerson()
+{
+    string fn = "";
+    string mn = "";
+    string ln = "";
+    int by = 0;
+    cout << "Enter the FIRST NAME of the person" <<endl;
+    cin >> fn;
+    cout << endl;
+    cout << "Enter the MIDDLE NAME of the person" <<endl;
+    cin >> mn;
+    cout << endl;
+    cout << "Enter the LAST NAME of the person" <<endl;
+    cin >> ln;
+    cout << endl;
+    cout << "Enter the BIRTH YEAR of the person" <<endl;
+    cin >> by;
+    cout << endl;
+    return Person(fn, mn, ln, by);
+}
+void interface_index()
+{
+    IndexDictionary<string> *ind_dict;
+    IndexDictionary<int> *ind_dict_INT;
+    ArraySequence<Person> *seq = new ArraySequence<Person>();
+    ofstream fout("out_index.txt");
+    int choose = 0;
+    int howManyPersons = 0;
+    Person newPerson;
+    string (Person::*getParam)() = NULL;
+    int (Person::*getParamINT)() = NULL;
+
+    cout << "DATA INDEXING" << endl;
+    while(true)
+    {
+        cout << "Enter 1 to generate some random persons" << endl;
+        cout << "Enter 2 to add a person" << endl;
+        cout << "Enter 3 to index data" << endl;
+        cout << "Enter a different number to quit" << endl;
+        cin >> choose;
+        cout << endl;
+
+        switch (choose)
+        {
+            case 1:
+                cout << "Enter how many persons to generate" << endl;
+                cin >> howManyPersons;
+                for (int i = 0; i < howManyPersons; i++)
+                {
+                    newPerson = Person(randomFN(), randomMN(), randomLN(), randomBY());
+                    seq->append(newPerson);
+                    cout << newPerson << endl;
+                }
+                cout << endl << howManyPersons << "persons have been generated" << endl << endl;
+                break;
+            case 2:
+                seq->append(enterPerson());
+                break;
+            case 3:
+                cout << "You need to choose a parameter to index data" << endl;
+                cout << "1: INDEX = FIRST NAME" << endl;
+                cout << "2: INDEX = MIDDLE NAME" << endl;
+                cout << "3: INDEX = LAST NAME" << endl;
+                cout << "4: INDEX = BIRTH YEAR" << endl;
+                cout << "5: INDEX = FULL NAME" << endl;
+                cout << "6: INDEX = FIO" << endl;
+                cin >> choose;
+                cout << endl;
+                switch(choose)
+                {
+                    case 1:
+                        getParam = Person::getFirstName;
+                        break;
+                    case 2:
+                        getParam = Person::getMiddleName;
+                        break;
+                    case 3:
+                        getParam = Person::getLastName;
+                        break;
+                    case 4:
+                        getParamINT = Person::getBirthYear;
+                        break;
+                    case 5:
+                        getParam = Person::getFullName;
+                        break;
+                    case 6:
+                        getParam = Person::getFIO;
+                        break;
+                    default:
+                        getParam = Person::getFirstName;
+                        break;
+                }
+                if(getParam != NULL)
+                {
+                    ind_dict = new IndexDictionary<string>(*seq, getParam);
+                } else ind_dict_INT = new IndexDictionary<int>(*seq, getParamINT);
+                cout << "Indexed data:" << endl;
+                if(getParam != NULL)
+                {
+                    ind_dict->print();
+                } else ind_dict_INT->print();
+                break;
+            default:
+                fout.close();
+                delete seq;
+                delete ind_dict;
+                return;
+        }
+    }
+}
 
 void interface()
 {
-
     int choose = 0;
-    int size = -1;
-    cout << "Enter the size of a sequence" << endl;
-    while (size < 0)
-    {
-        cin >> size;
-    }
-    cout << endl;
-    ArraySequence<int> *seq;
-    cout << "Enter 1 to fill in the sequence with random numbers" << endl;
-    cout << "Enter 2 to fill in the sequence manually" << endl;
-    cout << "Enter 3 to generate a sorted sequence" << endl;
+
+    cout << "Choose a task:" << endl;
+    cout << "Enter 1 to test data indexing" << endl;
+    cout << "Enter 2 to test" << endl;
+    cout << "Enter 3 to test" << endl;
+    cout << "Enter a different number to quit" << endl;
     cin >> choose;
     cout << endl;
-    int arr[size];
-    switch (choose)
+
+    switch(choose)
     {
         case 1:
-            seq = new ArraySequence<int>(size);
-            srand(time(0));
-            for (int i = 0; i < size; i++)
-            {
-                seq->set(rand(), i);
-            }
+            interface_index();
             break;
         case 2:
-            cout << "Enter " << size << " numbers to fill in the sequence" << endl;
-            for (int i = 0; i < size; i++)
-            {
-                cin >> arr[i];
-            }
-            cout << endl;
-            seq = new ArraySequence<int>(arr, size);
+
             break;
         case 3:
-            cout << "Enter 1 to generate a sequence sorted in descending order" << endl;
-            cout << "Enter 2 to generate a sequence sorted in ascending order" << endl;
-            cin >> choose;
-            cout << endl;
-            seq = new ArraySequence<int>(size);
-            if (choose == 1)
-            {
-                for (int i = 0; i < size; i++)
-                {
-                    seq->set(size - i - 1, i);
-                }
-            } else if (choose == 2)
-            {
-                for (int i = 0; i < size; i++)
-                {
-                    seq->set(i, i);
-                }
-            }
+
             break;
         default:
-            break;
+            return;
     }
-    delete arr;
-    ofstream fout("out.txt");
-    cout << "The sequence is saved in out.txt" << endl;
-    fout << "The sequence:" << endl;
-    for (int i = 0; i < size; i++)
-    {
-        fout << seq->get(i) << " ";
-    }
-    cout << endl;
-    fout << endl << endl;
-    cout << "Enter 1 to sort in descending order" << endl;
-    cout << "Enter 2 to sort in ascending order" << endl;
-    cin >> choose;
-    bool (*cmp)(int, int);
-    switch (choose)
-    {
-        case 1:
-            cmp = desc;
-            break;
-        case 2:
-            cmp = asc;
-            break;
-        default:
-            break;
-    }
-    cout << endl;
-    cout << "Enter 1 to use Bubble sort" << endl;
-    cout << "Enter 2 to use Merge sort" << endl;
-    cout << "Enter 3 to use Quick sort" << endl;
-    cout << "Enter 4 to run all of them and compare time spent" << endl;
-    cout << "Enter 5 to use Bogosort. DO NOT USE on sequences with size >10)" << endl;
-    cin >> choose;
-    cout << endl;
-    ArraySequence<int> *seq1;
-    void (*algSort)(Sequence<int>*, bool (*)(int, int));
-    double seconds = 0;
-    switch (choose)
-    {
-        case 1:
-            algSort = bubbleSort;
-            seconds = getTimeSort(seq, algSort, cmp);
-            cout << "Time spent on Bubble Sort: " << seconds << "seconds" << endl;
-            break;
-        case 2:
-            algSort = mergeSort;
-            seconds = getTimeSort(seq, algSort, cmp);
-            cout << "Time spent on Merge Sort: " << seconds << "seconds" << endl;
-            break;
-        case 3:
-            algSort = quickSort;
-            seconds = getTimeSort(seq, algSort, cmp);
-            cout << "Time spent on Quick Sort: " << seconds << "seconds" << endl;
-            break;
-        case 4:
-            seq1 = new ArraySequence<int>(size);
-            for (int i = 0; i < size; i++)
-            {
-                seq1->set(seq->get(i), i);
-            }
-            algSort = bubbleSort;
-            seconds = getTimeSort(seq1, algSort, cmp);
-            cout << "Time spent on Bubble Sort: " << seconds << "seconds" << endl;
-            if (isSorted(seq1, cmp)) cout << "The sequence is sorted successfully" << endl;
-            else cout << "The sequence is NOT sorted successfully" << endl;
-            for (int i = 0; i < size; i++)
-            {
-                seq1->set(seq->get(i), i);
-            }
-            algSort = mergeSort;
-            seconds = getTimeSort(seq1, algSort, cmp);
-            cout << "Time spent on Merge Sort: " << seconds << "seconds" << endl;
-            if (isSorted(seq1, cmp)) cout << "The sequence is sorted successfully" << endl;
-            else cout << "The sequence is NOT sorted successfully" << endl;
-            for (int i = 0; i < size; i++)
-            {
-                seq1->set(seq->get(i), i);
-            }
-            algSort = quickSort;
-            seconds = getTimeSort(seq1, algSort, cmp);
-            cout << "Time spent on Quick Sort: " << seconds << "seconds" << endl;
-            if (isSorted(seq1, cmp)) cout << "The sequence is sorted successfully" << endl;
-            else cout << "The sequence is NOT sorted successfully" << endl;
-            break;
-        case 5:
-            algSort = bogoSort;
-            seconds = getTimeSort(seq, algSort, cmp);
-            cout << "Time spent on BogoSort: " << seconds << "seconds" << endl;
-            break;
-        default:
-            break;
-    }
-    cout << endl;
-    if (choose != 4)
-    {
-        if (isSorted(seq, cmp)) cout << "The sequence is sorted successfully" << endl;
-        else cout << "The sequence is NOT sorted successfully" << endl;
-        cout << "Sorted sequence is saved in out.txt:" << endl;
-        fout << "Sorted sequence:" << endl;
-        for (int i = 0; i < size; i++)
-        {
-            fout << seq->get(i) << " ";
-        }
-        cout << endl;
-        fout << endl;
-    }
-    else if (choose == 4)
-    {
-        cout << "Sorted sequence is saved in out.txt" << endl;
-        fout << "Sorted sequence:" << endl;
-        for (int i = 0; i < size; i++)
-        {
-            fout << seq1->get(i) << " ";
-        }
-        cout << endl;
-        fout << endl;
-        delete seq1;
-    }
-    fout.close();
 }
 
 int main(int argc, const char *argv[])
 {
+    srand(time(0));
     int choose = 0;
     while(true)
     {

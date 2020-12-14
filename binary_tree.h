@@ -142,7 +142,7 @@ void printAll(node* nodePtr)
 			printAll(nodePtr->left);
 		}
 		std::cout << nodePtr->elem;
-        std::cout << " ";
+        std::cout << endl;
 		if (nodePtr->right != nullptr)
 		{
 			printAll(nodePtr->right);
