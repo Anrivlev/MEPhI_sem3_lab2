@@ -5,12 +5,14 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+#include "sparce_matrix.h"
 
 using namespace std;
 
 string FirstNames[10] {"Andrey", "Alexey", "Ivan", "Vasiliy", "Igor", "Egor", "Oleg", "Vladimir", "Alexander", "Michael"};
 string MiddleNames[10] {"Ivanov", "Frolov", "Ivlev", "Roslovtsev", "Privalenko", "Korotkov", "Novikov", "Romanov", "Demidov", "Svetov"};
 string LastNames[10] {"Andreevich", "Alexeevich", "Ivanovich", "Vasilievich", "Igorievich", "Egorovich", "Olegovich", "Vladimirovich", "Alexandrovich", "Michaelovich"};
+const string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 template <class T>
 void showTimeSearchIndex(IndexDictionary<T> *ind_dict, T index)
@@ -72,7 +74,7 @@ string getRS()
     string result = "";
     for (int i = 0; i < length; i++)
     {
-        result += getRC();
+        result += alphabet[rand() % 26];
     }
     return result;
 }
@@ -217,13 +219,84 @@ void interface_index()
     }
 }
 
+void interface_sparce_matrix()
+{
+    int choose = 0;
+    int x = 0;
+    int y = 0;
+    SparseMatrix<int> *matrix = new SparseMatrix<int>(0,0);
+
+
+    cout << "SPARCE MATRIXES" << endl;
+    cout << "You need to create a matrix" << endl;
+    cout << "Enter a number of rows" << endl;
+    cin >> choose;
+    matrix->setRows(choose);
+    cout << endl;
+    cout << "Enter a number of columns" << endl;
+    cin >> choose;
+    matrix->setColumns(choose);
+    cout << endl;
+    cout << "Enter 1 to generate a random matrix of a given size" << endl;
+    cout << "Note: you can choose an amount of non-zero elements" << endl;
+    cout << "Enter 2 to fill in the matrix manually" << endl;
+    cin >> choose;
+    cout << endl;
+    switch(choose)
+    {
+        case 1:
+            cout << "Enter an amount of non-zero elements" << endl;
+            cin >> choose;
+            cout << endl;
+            if (choose > matrix->getRows() * matrix->getColumns())
+                choose = matrix->getRows() * matrix->getColumns();
+            for (int i = 0; i < choose; i++)
+            {
+                do
+                {
+                    x = rand() % matrix->getRows();
+                    y = rand() % matrix->setColumns();
+                } while (!matrix->isNotZero(x,y));
+                matrix->set(x, y, (rand() % 10));
+            }
+            break;
+        case 2:
+            while(true)
+            {
+                cout << "Enter a row" << endl;
+                cin >> x;
+                cout << endl;
+                cout << "Enter a column" << endl;
+                cin >> y;
+                cout << endl;
+                cout << "Enter a value" << endl;
+                cin >> choose;
+                cout << endl;
+                matrix->set(x, y, choose);
+                cout << "Enter 1 to add another element to the matrix" << endl;
+                cout << "Enter a different number to finish matrix creating" << endl;
+                cin >> choose;
+                cout << endl;
+                if (choose != 1) break;
+            }
+            break;
+        default:
+            return;
+    }
+    while(true)
+    {
+
+    }
+
+}
+
 void interface()
 {
     int choose = 0;
 
     cout << "Choose a task:" << endl;
     cout << "Enter 1 to test data indexing" << endl;
-    cout << "Enter 2 to test" << endl;
+    cout << "Enter 2 to test sparce matrixes" << endl;
     cout << "Enter 3 to test" << endl;
     cout << "Enter a different number to quit" << endl;
     cin >> choose;
@@ -235,7 +308,7 @@ void interface()
             interface_index();
             break;
         case 2:
-
+            interface_sparce_matrix();
             break;
         case 3:
 
@@ -248,7 +321,6 @@ void interface()
 int main(int argc, const char *argv[])
 {
     srand(time(0));
-    int choose = 0;
     interface();
 	return 0;
 }
