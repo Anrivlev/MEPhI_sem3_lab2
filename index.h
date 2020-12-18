@@ -114,4 +114,8 @@ public:
     {
         this->dict->print();
     }
+    bool contains(T index)
+    {
+        return this->dict->containsKey(index);
+    }
 };

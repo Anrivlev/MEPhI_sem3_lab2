@@ -13,10 +13,27 @@ string MiddleNames[10] {"Ivanov", "Frolov", "Ivlev", "Roslovtsev", "Privalenko",
 string LastNames[10] {"Andreevich", "Alexeevich", "Ivanovich", "Vasilievich", "Igorievich", "Egorovich", "Olegovich", "Vladimirovich", "Alexandrovich", "Michaelovich"};
 
 template <class T>
-void getTimeSearchIndex(IndexDictionary<T> *ind_dict, T index)
+void showTimeSearchIndex(IndexDictionary<T> *ind_dict, T index)
 {
+    cout << "Search in indexed data" << endl;
     auto begin = chrono::steady_clock::now();
     cout << "Found value:" << ind_dict->get(index) << endl;
+    auto end = chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+    cout << "Time consumed: " << elapsed_ms.count() << " ms" << endl;
+    return;
+}
+template <class T>
+void showTimeSearchSequence(ArraySequence<Person> *seq, T index, T (Person::*getParam)())
+{
+    cout << "Search in unsorted sequence" << endl;
+    auto begin = chrono::steady_clock::now();
+    int i = 0;
+    for (i; i < seq->getSize(); i++)
+    {
+        if ((seq->get(i).*getParam)() == index) break;
+    }
+    cout << "Found value:" << seq->get(i) << endl;
     auto end = chrono::steady_clock::now();
     auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
     cout << "Time consumed: " << elapsed_ms.count() << " ms" << endl;
@@ -42,6 +59,24 @@ int randomBY()
 {
     return 1920 + (rand() % 100);
 }
+
+string getRC()
+{
+    char c = 65 + rand() % 26;
+    return "" + c;
+}
+
+string getRS()
+{
+    int length = 3 + rand() % 8;
+    string result = "";
+    for (int i = 0; i < length; i++)
+    {
+        result += getRC();
+    }
+    return result;
+}
+
 Person enterPerson()
 {
     string fn = "";
@@ -93,7 +128,7 @@ void interface_index()
                 cin >> howManyPersons;
                 for (int i = 0; i < howManyPersons; i++)
                 {
-                    newPerson = Person(randomFN(), randomMN(), randomLN(), randomBY());
+                    newPerson = Person(getRS(), getRS(), getRS(), randomBY());
                     seq->append(newPerson);
                     cout << newPerson << endl;
                 }
@@ -160,8 +195,16 @@ void interface_index()
                 cout << endl;
                 if(getParam != NULL)
                 {
-                    getTimeSearchIndex(ind_dict, index);
-                } else getTimeSearchIndex(ind_dict_INT, index_INT);
+                    if (ind_dict->contains(index))
+                    {
+                        showTimeSearchIndex(ind_dict, index);
+                        showTimeSearchSequence(seq, index, getParam);
+                    } else cout << "WRONG INDEX!" << endl;
+                } else if(ind_dict_INT->contains(index_INT))
+                {
+                    showTimeSearchIndex(ind_dict_INT, index_INT);
+                    showTimeSearchSequence(seq, index_INT, getParamINT);
+                } else cout << "WRONG INDEX!" << endl;
                 cout << endl;
 
                 break;
