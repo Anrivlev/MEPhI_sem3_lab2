@@ -4,13 +4,24 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <ctime>
+#include <chrono>
 
 using namespace std;
 
 string FirstNames[10] {"Andrey", "Alexey", "Ivan", "Vasiliy", "Igor", "Egor", "Oleg", "Vladimir", "Alexander", "Michael"};
 string MiddleNames[10] {"Ivanov", "Frolov", "Ivlev", "Roslovtsev", "Privalenko", "Korotkov", "Novikov", "Romanov", "Demidov", "Svetov"};
 string LastNames[10] {"Andreevich", "Alexeevich", "Ivanovich", "Vasilievich", "Igorievich", "Egorovich", "Olegovich", "Vladimirovich", "Alexandrovich", "Michaelovich"};
+
+template <class T>
+void getTimeSearchIndex(IndexDictionary<T> *ind_dict, T index)
+{
+    auto begin = chrono::steady_clock::now();
+    cout << "Found value:" << ind_dict->get(index) << endl;
+    auto end = chrono::steady_clock::now();
+    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+    cout << "Time consumed: " << elapsed_ms.count() << " ms" << endl;
+    return;
+}
 
 string randomFN()
 {
@@ -62,6 +73,8 @@ void interface_index()
     Person newPerson;
     string (Person::*getParam)() = NULL;
     int (Person::*getParamINT)() = NULL;
+    int index_INT = 0;
+    string index = "";
 
     cout << "DATA INDEXING" << endl;
     while(true)
@@ -84,7 +97,7 @@ void interface_index()
                     seq->append(newPerson);
                     cout << newPerson << endl;
                 }
-                cout << endl << howManyPersons << "persons have been generated" << endl << endl;
+                cout << endl << howManyPersons << " persons have been generated" << endl << endl;
                 break;
             case 2:
                 seq->append(enterPerson());
@@ -123,6 +136,7 @@ void interface_index()
                         getParam = Person::getFirstName;
                         break;
                 }
+
                 if(getParam != NULL)
                 {
                     ind_dict = new IndexDictionary<string>(*seq, getParam);
@@ -132,6 +146,24 @@ void interface_index()
                 {
                     ind_dict->print();
                 } else ind_dict_INT->print();
+
+                if(getParam != NULL)
+                {
+                    cout << "An amount of indexed persons: " << ind_dict->getCount() << endl;
+                } else cout << "An amount of indexed persons: " << ind_dict_INT->getCount() << endl;
+
+                cout << "To compare search speed enter an index" << endl;
+                if(getParam != NULL)
+                {
+                    cin >> index;
+                } else cin >> index_INT;
+                cout << endl;
+                if(getParam != NULL)
+                {
+                    getTimeSearchIndex(ind_dict, index);
+                } else getTimeSearchIndex(ind_dict_INT, index_INT);
+                cout << endl;
+
                 break;
             default:
                 fout.close();
@@ -174,13 +206,6 @@ int main(int argc, const char *argv[])
 {
     srand(time(0));
     int choose = 0;
-    while(true)
-    {
-        interface();
-        cout << "Enter 1 to start again" << endl;
-        cin >> choose;
-        cout << endl;
-        if (choose != 1) break;
-    }
+    interface();
 	return 0;
 }

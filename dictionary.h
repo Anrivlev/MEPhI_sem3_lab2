@@ -70,7 +70,7 @@ class Dictionary
 {
 protected:
 
-    BinaryTree<PairKE<TKey, TElement>>* dict;
+    BinaryTree<PairKE<TKey,  TElement>>* dict;
 
 public:
     Dictionary(const TKey key, const TElement elem, bool (*cmp)(PairKE<TKey, TElement>, PairKE<TKey, TElement>))

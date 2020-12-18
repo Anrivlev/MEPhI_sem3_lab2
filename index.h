@@ -104,7 +104,7 @@ public:
     }
     int getCount()
     {
-        return this->dict->getSize();
+        return this->dict->getCount();
     }
     string toString()
     {
