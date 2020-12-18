@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <chrono>
-#include "sparce_matrix.h"
+#include "sparse_matrix.h"
 
 using namespace std;
 
@@ -104,7 +104,6 @@ void interface_index()
     IndexDictionary<string> *ind_dict;
     IndexDictionary<int> *ind_dict_INT;
     ArraySequence<Person> *seq = new ArraySequence<Person>();
-    ofstream fout("out_index.txt");
     int choose = 0;
     int howManyPersons = 0;
     Person newPerson;
@@ -211,7 +210,6 @@ void interface_index()
 
                 break;
             default:
-                fout.close();
                 delete seq;
                 delete ind_dict;
                 return;
@@ -284,6 +282,9 @@ void interface_sparce_matrix()
             return;
     }
     if(!matrix->isNotZero(0,0)) matrix->setToZero(0,0);
+    cout << endl;
+    matrix->printAsMatrix();
+    matrix->printAsDict();
     while(true)
     {
 
@@ -297,7 +298,7 @@ void interface()
 
     cout << "Choose a task:" << endl;
     cout << "Enter 1 to test data indexing" << endl;
-    cout << "Enter 2 to test sparce matrixes" << endl;
+    cout << "Enter 2 to test sparse matrixes" << endl;
     cout << "Enter 3 to test" << endl;
     cout << "Enter a different number to quit" << endl;
     cin >> choose;

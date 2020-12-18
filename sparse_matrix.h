@@ -1,6 +1,9 @@
 #include "dictionary.h"
 #include "matrix.h"
 #include "sortFunctions.h"
+#include <string>
+
+
 template<class T1, class T2>
 class Pair
 {
@@ -133,11 +136,14 @@ public:
     }
     T get(int x, int y)
     {
-        if (x >= this->rows or y >= this->columns)
+        return this->get(Pair<int,int>(x,y));
+    }
+    T get (Pair<int,int> pair)
+    {
+        if (pair.getFirst() >= this->rows or pair.getSecond() >= this->columns)
         {
             throw std::out_of_range("OUT OF RANGE");
         }
-        Pair<int, int> pair = Pair<int, int>(x, y);
         if (this->isNotZero(pair))
         {
             return this->dict->get(pair);
@@ -162,5 +168,20 @@ public:
     void setColumns(int a)
     {
         this->columns = a;
+    }
+    void printAsDict()
+    {
+        this->dict->print();
+    }
+    void printAsMatrix()
+    {
+        for (int i = 0; i < this->rows; i++)
+        {
+            for (int j = 0; j < this->columns; j++)
+            {
+                cout << this->get(i,j) << " ";
+            }
+            cout << endl;
+        }
     }
 };
