@@ -255,7 +255,7 @@ void interface_sparce_matrix()
                 do
                 {
                     x = rand() % matrix->getRows();
-                    y = rand() % matrix->setColumns();
+                    y = rand() % matrix->getColumns();
                 } while (!matrix->isNotZero(x,y));
                 matrix->set(x, y, (rand() % 10));
             }
@@ -283,6 +283,7 @@ void interface_sparce_matrix()
         default:
             return;
     }
+    if(!matrix->isNotZero(0,0)) matrix->setToZero(0,0);
     while(true)
     {
 

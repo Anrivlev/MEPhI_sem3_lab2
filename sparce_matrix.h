@@ -1,6 +1,6 @@
 #include "dictionary.h"
 #include "matrix.h"
-
+#include "sortFunctions.h"
 template<class T1, class T2>
 class Pair
 {
@@ -8,7 +8,7 @@ private:
     T1 elem1;
     T2 elem2;
 public:
-    Pair = default;
+    Pair() = default;
     Pair(T1 elem1, T2 elem2)
     {
         this->elem1 = elem1;
@@ -78,11 +78,11 @@ private:
     int rows = 0;
     int columns = 0;
 public:
-    SparseMatrix(Matrix m)
+    SparseMatrix(Matrix<T> m)
     {
         this->rows = m.GetRows();
         this->columns = m.GetColumns();
-        this->dict = new Dictionary<Pair<int, int>, T>();
+        this->dict = new Dictionary<Pair<int, int>, T>(Pair<int,int>(0,0), m.Get(0,0), asc);
         for (int i = 0; i < m.GetRows(); i++)
         {
             for (int j = 0; j < m.GetColumns(); i++)
@@ -95,27 +95,27 @@ public:
     {
         this->rows = rows;
         this->columns = columns;
-        this->dict = new Dictionary<Pair<int, int>, T>();
+        this->dict = new Dictionary<Pair<int, int>, T>(Pair<int,int>(0,0), (T)0, asc);
     }
     ~SparseMatrix() = default;
     void set(int x, int y, T value)
     {
         this->set(Pair<int, int>(x,y), value);
     }
-    void set(Pair<T, T> pair, T value)
+    void set(Pair<int, int> pair, T value)
     {
         if (pair.getFirst() >= this->rows or pair.getSecond() >= this->columns)
         {
             throw std::out_of_range("OUT OF RANGE");
         }
         if (value != (T)0)
-            this->dict->add(pair value);
+            this->dict->add(pair, value);
     }
     void setToZero(int x, int y)
     {
         this->setToZero(Pair<int, int>(x,y));
     }
-    void setToZero(Pair<T, T> pair)
+    void setToZero(Pair<int, int> pair)
     {
         if (pair.getFirst() >= this->rows or pair.getSecond() >= this->columns)
         {
@@ -127,9 +127,9 @@ public:
     {
         return this->isNotZero(Pair<int,int>(x,y));
     }
-    bool isNotZero(Pair<T, T> pair)
+    bool isNotZero(Pair<int, int> pair)
     {
-        return this->dict->containsKey(pair)
+        return this->dict->containsKey(pair);
     }
     T get(int x, int y)
     {
@@ -137,7 +137,7 @@ public:
         {
             throw std::out_of_range("OUT OF RANGE");
         }
-        Pair<int, int> pair = Pair(x, y);
+        Pair<int, int> pair = Pair<int, int>(x, y);
         if (this->isNotZero(pair))
         {
             return this->dict->get(pair);

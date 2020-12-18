@@ -110,7 +110,8 @@ public:
     }
     void remove(TKey key)
     {
-        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>(key);
+        PairKE<TKey, TElement> spair = PairKE<TKey, TElement>();
+        spair.setKey(key);
         if(this->dict->exist(spair))
         {
             this->dict->erase(spair);
