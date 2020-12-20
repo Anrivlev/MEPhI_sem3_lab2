@@ -48,10 +48,14 @@ public:
     }
     bool operator<=(const Pair another)
     {
-        return this->elem1 <= another.elem1;
+        if (this->elem1 == another.elem1)
+            return this->elem2 <= another.elem2;
+        else return this->elem1 <= another.elem1;
     }
     bool operator>=(const Pair another)
     {
+        if (this->elem1 == another.elem1)
+            return this->elem2 >= another.elem2;
         return this->elem1 >= another.elem1;
     }
     bool operator!=(const Pair another)
@@ -113,6 +117,7 @@ public:
         }
         if (value != (T)0)
             this->dict->add(pair, value);
+        else this->setToZero(pair);
     }
     void setToZero(int x, int y)
     {
@@ -183,5 +188,17 @@ public:
             }
             cout << endl;
         }
+    }
+    Matrix<T> getMatrix()
+    {
+        Matrix<T> result = new Matrix<T>(this->getRows(), this->getColumns());
+        for (int i = 0; i < this->getRows(); i++)
+        {
+            for (int j = 0; j < this->getColumns(); j++)
+            {
+                result.Set(this->get(i, j), i, j);
+            }
+        }
+        return result;
     }
 };

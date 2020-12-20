@@ -222,6 +222,7 @@ void interface_sparce_matrix()
     int choose = 0;
     int x = 0;
     int y = 0;
+    int len = 0;
     SparseMatrix<int> *matrix = new SparseMatrix<int>(0,0);
 
 
@@ -244,18 +245,18 @@ void interface_sparce_matrix()
     {
         case 1:
             cout << "Enter an amount of non-zero elements" << endl;
-            cin >> choose;
+            cin >> len;
             cout << endl;
-            if (choose > matrix->getRows() * matrix->getColumns())
-                choose = matrix->getRows() * matrix->getColumns();
-            for (int i = 0; i < choose; i++)
+            if (len > matrix->getRows() * matrix->getColumns())
+                len = matrix->getRows() * matrix->getColumns();
+            for (int i = 0; i < len; i++)
             {
                 do
                 {
-                    x = rand() % matrix->getRows();
-                    y = rand() % matrix->getColumns();
-                } while (!matrix->isNotZero(x,y));
-                matrix->set(x, y, (rand() % 10));
+                    x = rand() % (matrix->getRows());
+                    y = rand() % (matrix->getColumns());
+                } while (matrix->isNotZero(x,y));
+                matrix->set(x, y, 1 + (rand() % 9));
             }
             break;
         case 2:
@@ -281,42 +282,42 @@ void interface_sparce_matrix()
         default:
             return;
     }
-    if(!matrix->isNotZero(0,0)) matrix->setToZero(0,0);
+    if(matrix->get(0,0) == 0) matrix->setToZero(0,0);
     cout << endl;
+    cout << "The matrix:" << endl;
     matrix->printAsMatrix();
-    matrix->printAsDict();
-    while(true)
-    {
-
-    }
-
+    cout << "Enter something to quit" << endl;
+    cin >> choose;
+    return;
 }
 
 void interface()
 {
     int choose = 0;
 
-    cout << "Choose a task:" << endl;
-    cout << "Enter 1 to test data indexing" << endl;
-    cout << "Enter 2 to test sparse matrixes" << endl;
-    cout << "Enter 3 to test" << endl;
-    cout << "Enter a different number to quit" << endl;
-    cin >> choose;
-    cout << endl;
-
-    switch(choose)
+    while(true)
     {
-        case 1:
-            interface_index();
-            break;
-        case 2:
-            interface_sparce_matrix();
-            break;
-        case 3:
+        cout << "Choose a task:" << endl;
+        cout << "Enter 1 to test data indexing" << endl;
+        cout << "Enter 2 to test sparse matrixes" << endl;
+        cout << "Enter 3 to test" << endl;
+        cout << "Enter a different number to quit" << endl;
+        cin >> choose;
+        cout << endl;
 
-            break;
-        default:
-            return;
+        switch (choose) {
+            case 1:
+                interface_index();
+                break;
+            case 2:
+                interface_sparce_matrix();
+                break;
+            case 3:
+
+                break;
+            default:
+                return;
+        }
     }
 }
 
