@@ -28,9 +28,9 @@ public:
         }
     }
     ~IndexDictionary() = default;
-    Person get(T key)
+    Person get(T index)
     {
-        return this->dict->get(key);
+        return this->dict->get(index);
     }
     int getCount()
     {
