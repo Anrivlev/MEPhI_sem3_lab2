@@ -131,4 +131,9 @@ public:
     {
         return this->dict->toString();
     }
+    void changeElem(TKey key, TElement elem)
+    {
+        PairKE<TKey, TElement> pair = PairKE<TKey, TElement>(key, elem);
+        this->dict->setElem(this->dict->search(pair), pair);
+    }
 };

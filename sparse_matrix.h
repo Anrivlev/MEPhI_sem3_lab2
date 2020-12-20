@@ -1,3 +1,4 @@
+#pragma once
 #include "dictionary.h"
 #include "matrix.h"
 #include "sortFunctions.h"

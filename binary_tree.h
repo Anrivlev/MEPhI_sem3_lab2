@@ -291,4 +291,8 @@ public:
         string str = "";
         return this->toString(this->root, str) +"\n";
     }
+    void setElem(node* cur, T elem)
+    {
+	    cur->elem = elem;
+    }
 };

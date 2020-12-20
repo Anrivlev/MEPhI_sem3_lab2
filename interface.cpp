@@ -6,6 +6,7 @@
 #include <string>
 #include <chrono>
 #include "sparse_matrix.h"
+#include "histogram.h"
 
 using namespace std;
 
@@ -115,9 +116,9 @@ void interface_index()
     cout << "DATA INDEXING" << endl;
     while(true)
     {
-        cout << "Enter 1 to generate some random persons" << endl;
-        cout << "Enter 2 to add a custom person" << endl;
-        cout << "Enter 3 to index data" << endl;
+        cout << "Enter 1 to add some random persons to the array" << endl;
+        cout << "Enter 2 to add a custom person to the array" << endl;
+        cout << "Enter 3 to index data from the array" << endl;
         cout << "Enter a different number to quit" << endl;
         cin >> choose;
         cout << endl;
@@ -280,6 +281,7 @@ void interface_sparce_matrix()
             }
             break;
         default:
+            delete matrix;
             return;
     }
     if(matrix->get(0,0) == 0) matrix->setToZero(0,0);
@@ -291,6 +293,55 @@ void interface_sparce_matrix()
     return;
 }
 
+void interface_histogram()
+{
+    ArraySequence<Person> *seq = new ArraySequence<Person>();
+    int choose = 0;
+    int howManyPersons = 0;
+    Person newPerson;
+    int (Person::*getParam)() = NULL;
+    Histogram *hist;
+
+    cout << "HISTOGRAM" << endl;
+    while(true) {
+        cout << "Enter 1 to add some random persons to the array" << endl;
+        cout << "Enter 2 to add a custom person to the array" << endl;
+        cout << "Enter 3 to build a histogram" << endl;
+        cout << "Enter a different number to quit" << endl;
+        cin >> choose;
+        cout << endl;
+
+        switch (choose) {
+            case 1:
+                cout << "Enter how many persons to generate" << endl;
+                cin >> howManyPersons;
+                for (int i = 0; i < howManyPersons; i++) {
+                    newPerson = Person(getRS(), getRS(), getRS(), randomBY());
+                    seq->append(newPerson);
+                    cout << newPerson << endl;
+                }
+                cout << endl << howManyPersons << " persons have been generated" << endl << endl;
+                break;
+            case 2:
+                seq->append(enterPerson());
+                break;
+            case 3:
+                cout << "BIRTH YEAR is a parameter for the histogram" << endl;
+                getParam = Person::getBirthYear;
+                cout << "Enter an amount of subsets" << endl;
+                cin >> choose;
+                cout << endl;
+                hist = new Histogram(*seq, getParam, choose);
+                cout << "The histogram:" << endl;
+                hist->print();
+                cout << "Enter anything to quit" << endl;
+                break;
+            default:
+                return;
+        }
+    }
+}
+
 void interface()
 {
     int choose = 0;
@@ -300,7 +351,7 @@ void interface()
         cout << "Choose a task:" << endl;
         cout << "Enter 1 to test data indexing" << endl;
         cout << "Enter 2 to test sparse matrixes" << endl;
-        cout << "Enter 3 to test" << endl;
+        cout << "Enter 3 to test histogram" << endl;
         cout << "Enter a different number to quit" << endl;
         cin >> choose;
         cout << endl;
@@ -313,7 +364,7 @@ void interface()
                 interface_sparce_matrix();
                 break;
             case 3:
-
+                interface_histogram();
                 break;
             default:
                 return;
