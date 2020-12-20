@@ -334,7 +334,7 @@ void interface_histogram()
                 hist = new Histogram(*seq, getParam, choose);
                 cout << "The histogram:" << endl;
                 hist->print();
-                cout << "Enter anything to quit" << endl;
+                system("pause");
                 break;
             default:
                 return;

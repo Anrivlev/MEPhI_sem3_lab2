@@ -28,19 +28,25 @@ public:
             if ((seq.get(i).*getParam)() > max)
                 max = (seq.get(i).*getParam)();
         }
-        double dif = (double)(max - min) / n;
+        int dif = (max - min) / n;
+        while (dif == 0)
+        {
+            n--;
+            dif = (max - min) / n;
+        }
         dict = new Dictionary<int, int>(min, 0, asc);
         for (int i = 1; i < n; i++)
         {
-            dict->add((int)(min + dif*i), 0);
+            dict->add((min + dif*i), 0);
         }
         int j = 0;
         int amount = 0;
         for (int i = 0; i < seq.getSize(); i++)
         {
-            j = (int)(((seq.get(i).*getParam)() - min)  / dif);
-            amount = dict->get((int)(min + j * dif));
-            dict->changeElem((int)(min + j * dif), amount + 1);
+            j = (((seq.get(i).*getParam)() - min)  / dif);
+            if (j == n) j--;
+            amount = dict->get((min + j * dif));
+            dict->changeElem((min + j * dif), amount + 1);
         }
         this->getParam = getParam;
     }
