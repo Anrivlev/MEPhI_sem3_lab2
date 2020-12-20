@@ -54,6 +54,14 @@ public:
     {
         delete dict;
     }
+    int getInfo(int subset)
+    {
+        return this->dict->get(subset);
+    }
+    int getAmountOfSubsets()
+    {
+        return this->dict->getCount();
+    }
     void print()
     {
         dict->print();

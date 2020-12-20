@@ -218,7 +218,7 @@ void interface_index()
     }
 }
 
-void interface_sparce_matrix()
+void interface_sparse_matrix()
 {
     int choose = 0;
     int x = 0;
@@ -361,7 +361,7 @@ void interface()
                 interface_index();
                 break;
             case 2:
-                interface_sparce_matrix();
+                interface_sparse_matrix();
                 break;
             case 3:
                 interface_histogram();

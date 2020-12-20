@@ -130,7 +130,7 @@ public:
         {
             throw std::out_of_range("OUT OF RANGE");
         }
-        this->dict->remove(pair);
+        if (this->isNotZero(pair)) this->dict->remove(pair);
     }
     bool isNotZero(int x, int y)
     {

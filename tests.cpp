@@ -1,6 +1,11 @@
 
 #include "sortFunctions.h"
 #include <iostream>
+#include "dictionary.h"
+#include "index.h"
+#include "matrix.h"
+#include "sparse_matrix.h"
+#include "histogram.h"
 
 using namespace std;
 
@@ -324,6 +329,107 @@ void testSortFunctions()
     delete arr2;
 }
 
+void testDictionary()
+{
+    bool (*cmp)(PairKE<int, int>, PairKE<int, int>) = asc;
+    Dictionary<int, int> *dict = new Dictionary<int, int>(101, 170, cmp);
+    assert(dict->containsKey(101));
+    assert(dict->get(101) == 170);
+    assert(dict->getCount() == 1);
+
+    dict->add(102, 101);
+    dict->add(170, 101);
+    dict->add(1, 1);
+    assert(!dict->containsKey(2));
+    assert(dict->getCount() == 4);
+    assert(dict->get(102) == 101);
+    assert(dict->get(1) == 1);
+
+    dict->changeElem(1, 2);
+    assert(!dict->containsKey(2));
+    assert(dict->containsKey(1));
+    assert(dict->getCount() == 4);
+    assert(dict->get(1) == 2);
+
+    dict->remove(1);
+    assert(!dict->containsKey(1));
+    assert(dict->getCount() == 3);
+
+    delete &cmp;
+    delete dict;
+}
+
+void testIndexDictionary()
+{
+    string (Person::*getParam)() = Person::getFirstName;
+    ArraySequence<Person> *seq = new ArraySequence<Person>();
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2001));
+    seq->append(Person("Ivan", "Ivanov", "Petrovich", 2002));
+    seq->append(Person("Andrey", "Petrov", "Ivanovich", 2003));
+
+    IndexDictionary<string> *ind_dict = new IndexDictionary<string>(*seq, getParam);
+    assert(ind_dict->get("Ivan").getBirthYear() == 2002);
+    assert(ind_dict->getCount() == 3);
+    assert(ind_dict->contains("Vadim"));
+
+    delete ind_dict;
+    delete seq;
+}
+
+void testSparseMatrix()
+{
+    SparseMatrix<int> *matrix = new SparseMatrix<int>(3, 4);
+    matrix->setRows(9);
+    matrix->setColumns(5);
+    matrix->set(3, 4, 5);
+    matrix->setToZero(1, 3);
+
+    matrix->set(2, 1, 9);
+    matrix->set(0,0,0);
+
+    assert(matrix->get(1,1) == 0);
+    assert(matrix->getColumns() == 5);
+    assert(matrix->getRows() == 9);
+    assert(matrix->getAmountOfNonZero() == 2);
+    matrix->setToZero(2, 1);
+    assert(matrix->getAmountOfNonZero() == 1);
+    assert(!matrix->isNotZero(2, 1));
+    assert(matrix->isNotZero(3,4));
+    assert(matrix->get(3,4) == 5);
+
+    delete matrix;
+}
+
+void testHistogram()
+{
+    ArraySequence<Person> *seq = new ArraySequence<Person>();
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2001));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2004));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2003));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2014));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2051));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2099));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2108));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 3008));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 2223));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 1678));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 1578));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 1890));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 1537));
+    seq->append(Person("Vadim", "Ivanov", "Ivanovich", 9999));
+
+
+    int (Person::*getParam)() = Person::getBirthYear;
+    Histogram *hist;
+
+    hist = new Histogram(*seq, getParam, 4);
+
+    assert(hist->getAmountOfSubsets() == 4);
+
+    delete seq;
+    delete &getParam;
+    delete hist;
+}
 
 
 int main(int argc, const char *argv[]){
@@ -337,6 +443,14 @@ int main(int argc, const char *argv[]){
     cout << "class ListSequence is successfully tested" << endl;
 	testSortFunctions();
     cout << "Sort functions for class Sequence are successfully tested" << endl;
+    testDictionary();
+    cout << "class Dictionary is successfully tested" << endl;
+    testIndexDictionary();
+    cout << "class IndexDictionary is successfully tested" << endl;
+    testSparseMatrix();
+    cout << "class SparseMatrix is successfully tested" << endl;
+    testHistogram();
+    cout << "class Histogram is successfully tested" << endl;
 	system("pause");
 	return 0;
 }
